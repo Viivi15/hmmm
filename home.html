@@ -68,7 +68,8 @@
         </div>
         <div class="journey-screen" data-screen="2">
             <p class="journey-text small">June 20, 2024 &nbsp;•&nbsp; 12:21 AM</p>
-            <p class="journey-text">A conversation began.</p>
+            <p class="journey-text">A conversation beg
+                an.</p>
         </div>
         <div class="journey-screen" data-screen="3">
             <p class="journey-text">It wasn’t instant.<br>It became real slowly.</p>
@@ -139,26 +140,32 @@
                 </div>
             </div>
 
-            <div id="window-gift" class="window draggable" style="display: none; top: 5%; left: 30%; width: 400px; height: 680px; background: #000;">
+            <div id="window-gift" class="window draggable" style="display: none; top: 5%; left: 10%; width: 900px; height: 650px; background: #000;">
                 <div class="title-bar" style="background: linear-gradient(90deg, #ff3399, #ff66b2);">
-                    <div class="title-bar-text">Birthday_Surprise.exe</div>
+                    <div class="title-bar-text">Birthday_Surprise.exe - The Story of You</div>
                     <div class="title-bar-controls">
                         <button aria-label="Close" onclick="closeWindow('window-gift')">X</button>
                     </div>
                 </div>
                 
-                <div class="window-body app-container">
+                <div class="window-body app-container widescreen">
                     
-                    <div id="screen-intro" class="app-screen active-screen">
-                        <img src="https://media.tenor.com/On7KVX1t_YYAAAAi/mocha-bear.gif" class="intro-bear" alt="cute bear">
-                        <h2 class="neon-text">A Cutiepie was born today!</h2>
-                        <p>21 years ago...</p>
-                        <button class="action-btn" onclick="nextScreen('screen-cake')">🎁 Start the Surprise</button>
+                    <div class="story-progress">
+                        <div class="progress-bar" id="gift-progress"></div>
                     </div>
 
-                    <div id="screen-cake" class="app-screen">
-                        <h2 class="neon-text">Make a Wish...</h2>
-                        <div class="cake-container">
+                    <div id="slide-intro" class="story-slide active">
+                        <div class="center-content">
+                            <img src="https://media.tenor.com/On7KVX1t_YYAAAAi/mocha-bear.gif" class="intro-bear" alt="cute bear">
+                            <h1 class="neon-title">A Cutiepie was born today!</h1>
+                            <p class="subtitle">Are you ready for your surprise?</p>
+                            <button class="magical-btn" onclick="nextStorySlide('slide-cake')">Yes, show me! ✨</button>
+                        </div>
+                    </div>
+
+                    <div id="slide-cake" class="story-slide">
+                        <h2 class="neon-text">First, Make a Wish... 🎂</h2>
+                        <div class="cake-container scale-up">
                             <div class="cake">
                                 <div class="candle" id="candle" onclick="lightCandle()"></div>
                                 <div class="flame" id="flame"></div>
@@ -167,69 +174,93 @@
                                 <div class="layer layer-btm"></div>
                             </div>
                         </div>
-                        <p id="cake-msg">Tap the candle to light it! 🕯️</p>
-                        <button id="btn-balloons" class="action-btn hidden" onclick="nextScreen('screen-balloons')">🎈 Pop Balloons</button>
+                        <p id="cake-msg" class="instruction">Tap the candle to light it!</p>
+                        <button id="btn-after-cake" class="magical-btn hidden" onclick="nextStorySlide('slide-notes')">Wish Made! Next ➡️</button>
                     </div>
 
-                    <div id="screen-balloons" class="app-screen">
-                        <h2 class="neon-text">Pop All 4 Balloons!</h2>
-                        <div class="balloon-grid">
-                            <div class="balloon red" onclick="popBalloon(this)"></div>
-                            <div class="balloon blue" onclick="popBalloon(this)"></div>
-                            <div class="balloon green" onclick="popBalloon(this)"></div>
-                            <div class="balloon yellow" onclick="popBalloon(this)"></div>
-                        </div>
-                        <button id="btn-envelope" class="action-btn hidden" onclick="nextScreen('screen-envelope')">💌 Open Message</button>
-                    </div>
-
-                    <div id="screen-envelope" class="app-screen pink-bg">
-                        <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmhmZHRzaHlqanh6aW4zcnF6eG5qN3p5eW54dzh5eXF6eXF6eXF6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/LpdiF3Z6L5V5Z6Y8Y/giphy.gif" class="kitty-peek" alt="kitty">
-                        <div class="cute-envelope" onclick="openMainContent()">
-                            <div class="envelope-flap"></div>
-                            <div class="envelope-pocket"></div>
-                            <div class="heart-seal">❤</div>
-                        </div>
-                        <div class="click-hint">✨ Click to Open ✨</div>
-                    </div>
-
-                    <div id="screen-feed" class="app-screen scrollable pink-bg">
-                        
-                        <div class="app-card">
-                            <h3>Little Notes From My Heart 💌</h3>
-                            <div class="sticky-note yellow" onclick="alert('You make every day brighter ☀️')"><p>You make every day brighter ☀️</p></div>
-                            <div class="sticky-note purple" onclick="alert('You\'re my favorite person 💕')"><p>You're my favorite person 💕</p></div>
-                        </div>
-
-                        <div class="app-card">
-                            <h3>Playlist For You 🎵</h3>
-                            <div class="music-player">
-                                <img src="https://i.scdn.co/image/ab67616d0000b273b5f9e28219c169fd4b9e8379" class="album-cover" alt="cover">
-                                <div class="song-details">
-                                    <h4>Die With A Smile</h4>
-                                    <p>Lady Gaga</p>
+                    <div id="slide-photos" class="story-slide">
+                        <h2 class="section-title">Some Special Moments 📸</h2>
+                        <div class="photo-carousel">
+                            <button class="carousel-btn prev-btn hidden" onclick="navigatePhotos(-1)">Prev</button>
+                            <div class="photo-display">
+                                <!-- Photo cards will be dynamically managed by JS -->
+                                <div class="photo-card active" data-index="0">
+                                    <img src="https://media.tenor.com/f2Q8Hj8s5owAAAAM/hello-kitty-heart.gif" alt="memory">
+                                    <p>Us being cute</p>
                                 </div>
-                                <div class="play-btn">▶</div>
+                                <div class="photo-card" data-index="1">
+                                    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmhmZHRzaHlqanh6aW4zcnF6eG5qN3p5eW54dzh5eXF6eXF6eXF6eSZlcD12MV9pbnRlcm5pbF9naWZfYnlfaWQmY3Q9cw/LpdiF3Z6L5V5Z6Y8Y/giphy.gif" alt="memory">
+                                    <p>Peekaboo!</p>
+                                </div>
+                                <!-- Add more photo-card divs as needed -->
+                            </div>
+                            <button class="carousel-btn next-btn" onclick="navigatePhotos(1)">Next</button>
+                        </div>
+                        <button id="btn-after-photos" class="magical-btn bottom-right hidden" onclick="nextStorySlide('slide-notes')">Continue ➡️</button>
+                    </div>
+
+                    <div id="slide-notes" class="story-slide">
+                        <h2 class="section-title">Little Notes From My Heart 💌</h2>
+                        <div class="notes-display">
+                            <div class="note-card" data-note-index="0">
+                                <div class="note-front">Click to Flip!</div>
+                                <div class="note-back">You make every day brighter ☀️</div>
+                            </div>
+                            <div class="note-card" data-note-index="1">
+                                <div class="note-front">Click to Flip!</div>
+                                <div class="note-back">You're my favorite person 💕</div>
+                            </div>
+                            <div class="note-card" data-note-index="2">
+                                <div class="note-front">Click to Flip!</div>
+                                <div class="note-back">You make me smile ✨</div>
                             </div>
                         </div>
+                        <button id="btn-after-notes" class="magical-btn bottom-right hidden" onclick="nextStorySlide('slide-playlist')">Continue ➡️</button>
+                    </div>
 
-                        <div class="app-card">
-                            <h3>Some Sweet Moments 📸</h3>
-                            <div class="photo-stack">
-                                <img src="https://media.tenor.com/f2Q8Hj8s5owAAAAM/hello-kitty-heart.gif" alt="moment">
-                            </div>
-                            <p style="font-size: 10px; color: #888;">(Imagine swiping these...)</p>
-                        </div>
-
-                        <div class="app-card game-card">
-                            <h3>Catch Hearts! 🎮</h3>
-                            <p>Score: <span id="score">0</span>/15</p>
-                            <div id="game-canvas">
-                                <button class="start-game-btn" onclick="startGame()">▶ Play</button>
-                                <div id="catcher" style="display:none;">🐱</div>
+                    <div id="slide-playlist" class="story-slide">
+                        <h2 class="section-title">Songs Dedicated to U 🎵</h2>
+                        <div class="music-grid">
+                            <div class="spotify-card">
+                                <img src="https://i.scdn.co/image/ab67616d0000b273b5f9e28219c169fd4b9e8379" alt="album">
+                                <div class="song-info">
+                                    <h3>Die With A Smile</h3>
+                                    <p>Lady Gaga, Bruno Mars</p>
+                                    <div class="lyrics">"If the world was ending, I'd wanna be next to you..."</div>
+                                </div>
                             </div>
                         </div>
+                        <button class="magical-btn bottom-right" onclick="nextStorySlide('slide-game-intro')">One Last Thing... ➡️</button>
+                    </div>
 
-                        <br><br>
+                    <div id="slide-game-intro" class="story-slide pink-theme">
+                        <div class="center-content">
+                            <h1 class="neon-title">Catch Hearts & Hello Kitty!</h1>
+                            <p>Catch 5 hearts to win my heart forever.</p>
+                            <button class="magical-btn" onclick="startGameTransition()">Play Game 🎮</button>
+                        </div>
+                    </div>
+
+                    <div id="slide-game-play" class="story-slide">
+                        <div class="game-header">
+                            <span>Score: <b id="new-score">0</b>/5</span>
+                            <span>Time: <b id="game-timer">30s</b></span>
+                        </div>
+                        <div id="new-game-canvas">
+                            <div id="new-catcher">🐱</div>
+                        </div>
+                    </div>
+
+                    <div id="slide-winner" class="story-slide">
+                        <div class="winner-card">
+                            <div class="trophy-icon">🏆</div>
+                            <h2>Game Complete!</h2>
+                            <p class="winner-text">You did it! You caught my heart!</p>
+                            <div class="final-message-box">
+                                "Thank you for playing! I hope this little game shows how much I care. My heart is yours to catch, always."
+                            </div>
+                            <button class="magical-btn" onclick="closeWindow('window-gift')">Close with Love ❤️</button>
+                        </div>
                     </div>
 
                 </div>

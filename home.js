@@ -245,197 +245,261 @@ function startCosmicJourney() {
 }
 
 
-// --- NEW BIRTHDAY SURPRISE FUNCTIONS ---
+// =============================================== //
+// ==== WIDESCREEN STORY LOGIC (REVISED) ==== //
+// =============================================== //
 
-//NAVIGATION & STATE RESET
-function nextScreen(screenId) {
-    document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active-screen'));
-    const nextScreenEl = document.getElementById(screenId);
-    if(nextScreenEl) nextScreenEl.classList.add('active-screen');
+let currentPhotoIndex = 0;
+let photosViewedCount = 0;
+let notesFlippedCount = 0;
+const totalPhotos = 2; // Based on home.html, two photo-card divs
+const totalNotes = 3;  // Based on home.html, three note-card divs
+
+function nextStorySlide(targetId) {
+    const current = document.querySelector('.story-slide.active');
+    if(current) current.classList.remove('active');
+
+    setTimeout(() => {
+        const next = document.getElementById(targetId);
+        if(next) next.classList.add('active');
+        
+        // Specific initializations for new slides
+        if (targetId === 'slide-photos') {
+            initPhotoCarousel();
+        } else if (targetId === 'slide-notes') {
+            initNotesDisplay();
+        }
+    }, 400); 
+    updateProgressBar(targetId);
 }
 
-function resetBirthdayApp() {
-    // Reset to the first screen
-    nextScreen('screen-intro');
-    
-    // Reset cake
-    const flame = document.getElementById('flame');
-    const cakeMsg = document.getElementById('cake-msg');
-    const btnBalloons = document.getElementById('btn-balloons');
-    if(flame) flame.style.display = 'none';
-    if(cakeMsg) cakeMsg.innerText = "Tap the candle to light it! 🕯️";
-    if(btnBalloons) btnBalloons.classList.add('hidden');
-    
-    // Reset balloons
-    balloonsPopped = 0;
-    document.querySelectorAll('.balloon').forEach(b => {
-        b.style.opacity = '1';
-        b.style.transform = 'scale(1)';
-        b.style.pointerEvents = 'auto';
-    });
-    const btnEnvelope = document.getElementById('btn-envelope');
-    if(btnEnvelope) btnEnvelope.classList.add('hidden');
-
-    // Reset envelope
-    const envelopeFlap = document.querySelector('.envelope-flap');
-    if(envelopeFlap) {
-        envelopeFlap.style.transform = 'rotateX(0deg)';
-        envelopeFlap.style.zIndex = '4';
+function updateProgressBar(currentSlideId) {
+    const slides = ["slide-intro", "slide-cake", "slide-photos", "slide-notes", "slide-playlist", "slide-game-intro", "slide-game-play", "slide-winner"];
+    const currentIndex = slides.indexOf(currentSlideId);
+    if (currentIndex > -1) {
+        const progress = ((currentIndex + 1) / slides.length) * 100;
+        const progressBar = document.getElementById('gift-progress');
+        if (progressBar) {
+            progressBar.style.width = `${progress}%`;
+        }
     }
 }
 
-// 🕯️ CAKE LOGIC
+// CAKE LOGIC (Updated)
 function lightCandle() {
     const flame = document.getElementById('flame');
     const msg = document.getElementById('cake-msg');
-    const btn = document.getElementById('btn-balloons');
+    const btn = document.getElementById('btn-after-cake');
     
-    if (flame && msg && btn && flame.style.display !== 'block') {
-        flame.style.display = 'block';
+    if (flame && flame.style.display !== 'block') {
+        flame.style.display = 'block'; // Show flame
         msg.innerText = "YAY! Happy Birthday! 🎂";
-        setTimeout(() => {
-            btn.classList.remove('hidden');
-        }, 1000);
-    }
-}
-
-// 🎈 BALLOON LOGIC
-let balloonsPopped = 0;
-function popBalloon(element) {
-    if (element.style.opacity === '0') return;
-    
-    element.style.transform = "scale(1.3)";
-    setTimeout(() => {
-        element.style.opacity = "0";
-        element.style.pointerEvents = "none";
-        balloonsPopped++;
         
-        if (balloonsPopped === 4) {
-            const btnEnvelope = document.getElementById('btn-envelope');
-            if(btnEnvelope) btnEnvelope.classList.remove('hidden');
+        if(btn) {
+            btn.classList.remove('hidden');
         }
-    }, 200);
+    }
 }
 
-// 💌 ENVELOPE LOGIC
-function openMainContent() {
-    const envelopeFlap = document.querySelector('.envelope-flap');
-    if (envelopeFlap) {
-        envelopeFlap.style.transform = 'rotateX(180deg)';
-        envelopeFlap.style.zIndex = '1';
+// PHOTO CAROUSEL LOGIC
+function initPhotoCarousel() {
+    currentPhotoIndex = 0;
+    photosViewedCount = 0;
+    const photoCards = document.querySelectorAll('#slide-photos .photo-card');
+    photoCards.forEach((card, index) => {
+        if (index === 0) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
+        }
+    });
+    updatePhotoCarouselUI();
+}
+
+function navigatePhotos(direction) {
+    const photoCards = document.querySelectorAll('#slide-photos .photo-card');
+    photoCards[currentPhotoIndex].classList.remove('active');
+    
+    currentPhotoIndex += direction;
+    if (currentPhotoIndex < 0) currentPhotoIndex = photoCards.length - 1;
+    if (currentPhotoIndex >= photoCards.length) currentPhotoIndex = 0;
+    
+    photoCards[currentPhotoIndex].classList.add('active');
+    
+    // Mark photo as viewed
+    photoCards[currentPhotoIndex].dataset.viewed = 'true';
+    photosViewedCount = document.querySelectorAll('#slide-photos .photo-card[data-viewed="true"]').length;
+
+    updatePhotoCarouselUI();
+}
+
+function updatePhotoCarouselUI() {
+    const prevBtn = document.querySelector('#slide-photos .prev-btn');
+    const nextBtn = document.querySelector('#slide-photos .next-btn');
+    const continueBtn = document.getElementById('btn-after-photos');
+
+    // Hide prev/next if only one photo
+    if (totalPhotos <= 1) {
+        if (prevBtn) prevBtn.classList.add('hidden');
+        if (nextBtn) nextBtn.classList.add('hidden');
+    } else {
+        if (prevBtn) prevBtn.classList.remove('hidden');
+        if (nextBtn) nextBtn.classList.remove('hidden');
     }
     
-    setTimeout(() => {
-        nextScreen('screen-feed');
+    // Show continue button only when all photos have been viewed
+    if (continueBtn) {
+        if (photosViewedCount >= totalPhotos) {
+            continueBtn.classList.remove('hidden');
+        } else {
+            continueBtn.classList.add('hidden');
+        }
+    }
+}
+
+
+// NOTES FLIPPING LOGIC
+function initNotesDisplay() {
+    notesFlippedCount = 0;
+    const noteCards = document.querySelectorAll('#slide-notes .note-card');
+    noteCards.forEach(card => {
+        card.classList.remove('flipped');
+        card.removeEventListener('click', flipNoteCard); // Remove old listeners
+        card.addEventListener('click', flipNoteCard); // Add new listener
+        card.dataset.flipped = 'false'; // Reset flipped state
+    });
+    document.getElementById('btn-after-notes').classList.add('hidden'); // Hide continue button
+}
+
+function flipNoteCard(event) {
+    const card = event.currentTarget;
+    if (card.dataset.flipped === 'false') {
+        card.classList.add('flipped');
+        card.dataset.flipped = 'true';
+        notesFlippedCount++;
+        
+        if (notesFlippedCount >= totalNotes) {
+            document.getElementById('btn-after-notes').classList.remove('hidden'); // Show continue button
+        }
+    }
+}
+
+
+// GAME LOGIC (Updated for Widescreen)
+let newGameScore = 0;
+let newGameActive = false;
+let newGameSpawner;
+let gameTimerInterval;
+let gameTime = 30; // 30 seconds for the game
+
+function startGameTransition() {
+    nextStorySlide('slide-game-play');
+    setTimeout(startNewGame, 1000); // Wait for slide to appear
+}
+
+function startNewGame() {
+    newGameScore = 0;
+    newGameActive = true;
+    gameTime = 30; // Reset game time
+    document.getElementById('new-score').innerText = "0";
+    document.getElementById('game-timer').innerText = `${gameTime}s`;
+    
+    const canvas = document.getElementById('new-game-canvas');
+    const catcher = document.getElementById('new-catcher');
+
+    // Mouse Movement
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        catcher.style.left = `${x}px`;
+    });
+
+    // Game Timer
+    gameTimerInterval = setInterval(() => {
+        gameTime--;
+        document.getElementById('game-timer').innerText = `${gameTime}s`;
+        if (gameTime <= 0) {
+            endNewGame();
+        }
+    }, 1000);
+
+    // Spawn Hearts
+    newGameSpawner = setInterval(() => {
+        if(!newGameActive) return;
+        
+        const heart = document.createElement('div');
+        heart.innerText = "❤️";
+        heart.style.position = "absolute";
+        heart.style.left = Math.random() * 90 + "%";
+        heart.style.top = "-30px";
+        heart.style.fontSize = "24px";
+        heart.style.transition = "top 2s linear";
+        canvas.appendChild(heart);
+
+        // Animate falling
+        setTimeout(() => { heart.style.top = "420px"; }, 50);
+
+        // Detect Catch
+        const checkHit = setInterval(() => {
+            const hRect = heart.getBoundingClientRect();
+            const cRect = catcher.getBoundingClientRect();
+            
+            if (hRect.bottom >= cRect.top && hRect.right >= cRect.left && hRect.left <= cRect.right) {
+                newGameScore++;
+                document.getElementById('new-score').innerText = newGameScore;
+                heart.remove();
+                clearInterval(checkHit);
+                
+                if(newGameScore >= 5) {
+                    endNewGame();
+                }
+            }
+        }, 50);
+
+        // Cleanup
+        setTimeout(() => { 
+            if(heart.parentNode) heart.remove(); 
+            clearInterval(checkHit);
+        }, 2050);
+
     }, 800);
 }
 
-// 🎮 GAME LOGIC
-let gameActive = false;
-let gameScore = 0;
-let gameSpawner;
-
-function startGame() {
-    if (gameActive) return;
-    gameActive = true;
-    gameScore = 0;
-    const scoreEl = document.getElementById('score');
-    if(scoreEl) scoreEl.innerText = gameScore;
+function endNewGame() {
+    newGameActive = false;
+    clearInterval(newGameSpawner);
+    clearInterval(gameTimerInterval); // Stop game timer
     
-    const startBtn = document.querySelector('.start-game-btn');
-    const catcher = document.getElementById('catcher');
-    if (startBtn) startBtn.style.display = 'none';
-    if (catcher) catcher.style.display = 'block';
-    
-    const canvas = document.getElementById('game-canvas');
-    if(!canvas) return;
-
-    const moveCatcher = (e) => {
-        const rect = canvas.getBoundingClientRect();
-        let x = e.clientX - rect.left;
-        // Center catcher on cursor and constrain
-        let catcherWidth = catcher.offsetWidth;
-        let newLeft = x - catcherWidth / 2;
-        if (newLeft < 0) newLeft = 0;
-        if (newLeft > rect.width - catcherWidth) newLeft = rect.width - catcherWidth;
-        catcher.style.left = newLeft + 'px';
-    };
-    canvas.addEventListener('mousemove', moveCatcher);
-
-    gameSpawner = setInterval(spawnGameHeart, 800);
+    // Remove all hearts from canvas
+    document.querySelectorAll('#new-game-canvas .heart').forEach(heart => heart.remove());
 
     setTimeout(() => {
-        endGame(moveCatcher);
-    }, 15000);
+        nextStorySlide('slide-winner');
+    }, 500);
 }
 
-function spawnGameHeart() {
-    const canvas = document.getElementById('game-canvas');
-    if (!gameActive || !canvas) return;
-
-    const heart = document.createElement('div');
-    heart.innerHTML = '❤️';
-    heart.className = 'falling-heart';
-    heart.style.left = Math.random() * 90 + '%';
-    canvas.appendChild(heart);
+function resetBirthdayApp() {
+    // Reset to intro
+    document.querySelectorAll('.story-slide').forEach(s => s.classList.remove('active'));
+    document.getElementById('slide-intro').classList.add('active');
     
-    const collisionCheck = setInterval(() => {
-        const catcher = document.getElementById('catcher');
-        if (!heart || !catcher) {
-            clearInterval(collisionCheck);
-            return;
-        }
-        const heartRect = heart.getBoundingClientRect();
-        const catcherRect = catcher.getBoundingClientRect();
-        if (heartRect.bottom > catcherRect.top && heartRect.right > catcherRect.left && heartRect.left < catcherRect.right) {
-            heart.remove();
-            gameScore++;
-            const scoreEl = document.getElementById('score');
-            if(scoreEl) scoreEl.innerText = gameScore;
-            clearInterval(collisionCheck);
-        }
-    }, 50);
+    // Reset Cake
+    document.getElementById('flame').style.display = 'none';
+    document.getElementById('btn-after-cake').classList.add('hidden');
+    document.getElementById('cake-msg').innerText = "Tap the candle to light it!";
 
-    setTimeout(() => {
-        if(heart) heart.remove();
-        clearInterval(collisionCheck);
-    }, 1900);
-}
+    // Reset Photos
+    initPhotoCarousel(); // Re-initialize to reset state
 
-function endGame(moveCatcherCallback) {
-    gameActive = false;
-    clearInterval(gameSpawner);
-    
-    const canvas = document.getElementById('game-canvas');
-    if(!canvas) return;
+    // Reset Notes
+    initNotesDisplay(); // Re-initialize to reset state
 
-    // Remove old hearts
-    canvas.querySelectorAll('.falling-heart').forEach(h => h.remove());
-    if (moveCatcherCallback) {
-        canvas.removeEventListener('mousemove', moveCatcherCallback);
-    }
-
-    // --- NEW: High Score Logic ---
-    let highScore = localStorage.getItem('heartGameHighScore') || 0;
-    let msg = `Game Over! You caught ${gameScore} hearts! ❤️`;
-    
-    if (gameScore > highScore) {
-        localStorage.setItem('heartGameHighScore', gameScore);
-        msg += `\n🌟 NEW HIGH SCORE! 🌟`;
-    } else {
-        msg += `\n(Best: ${highScore})`;
-    }
-    // -----------------------------
-
-    alert(msg);
-    
-    const startBtn = document.querySelector('.start-game-btn');
-    if(startBtn) {
-        startBtn.style.display = 'block';
-        startBtn.innerText = 'Play Again';
-    }
-    const catcher = document.getElementById('catcher');
-    if(catcher) catcher.style.display = 'none';
+    // Reset Game (if necessary)
+    newGameScore = 0;
+    newGameActive = false;
+    if (newGameSpawner) clearInterval(newGameSpawner);
+    if (gameTimerInterval) clearInterval(gameTimerInterval);
+    document.querySelectorAll('#new-game-canvas .heart').forEach(heart => heart.remove());
 }
 
 // --- COSMIC TIMELINE OBSERVER ---
