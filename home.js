@@ -11,6 +11,7 @@ let currentScreen = 1; // Initial screen
 let totalScreens;
 const screenTimings = [4000, 4000, 5000, 5000, 99999]; // Time for each screen, last one is indefinite
 
+
 // =============================================== //
 // ==== JOURNEY INTRO LOGIC (Global Function) ==== //
 // =============================================== //
@@ -130,20 +131,97 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 // --- BASE DESKTOP UI FUNCTIONS (can be outside DOMContentLoaded) ---
 
+let zIndexCounter = 100; // Global for window z-index
+let offset = 0; // Global for window staggering
+
 // Function to Open Windows
 function openWindow(id) {
-    const windowEl = document.getElementById(id);
-    if(windowEl) windowEl.style.display = 'block';
+    // new Audio("assets/sounds/click.mp3").play(); // Commented out for now as no audio file
+    const win = document.getElementById(id);
+    if (!win) return;
+
+    win.style.display = 'flex'; // Make window visible before animation
+
+    offset += 18; // slight stagger
+    if (offset > 120) offset = 0;
+
+    // Do not reposition the gift window or other specifically placed windows
+    if (id !== 'window-gift' && id !== 'window-chat' && id !== 'window-v3') {
+        win.style.left = `calc(50% - 260px + ${offset}px)`;
+        win.style.top  = `calc(50% - 180px + ${offset}px)`;
+    }
+
+    win.style.zIndex = zIndexCounter++;
+
+    // Reset animation/transition
+    win.classList.remove("active");
+    void win.offsetWidth; // Trigger reflow to restart CSS animations
+    win.classList.add("active");
+
+    // If it's the fancy blueprint window, implement character-by-character typing
+    if (win.classList.contains('fancy')) {
+        const paragraphs = win.querySelectorAll('.window-body p');
+        let currentDelay = 0;
+        const charTypingSpeed = 50; // Milliseconds per character
+
+        function typeText(pElement, fullText, delayMs, charSpeedMs) {
+            setTimeout(() => {
+                pElement.style.visibility = 'visible'; // Make paragraph visible
+                let i = 0;
+                // Temporarily store original content to type character by character
+                pElement.innerHTML = ''; // Clear content first
+                const typingInterval = setInterval(() => {
+                    if (i < fullText.length) {
+                        // Basic check for HTML tag - very simple, might need refinement for complex HTML
+                        if (fullText.substring(i, i + 1) === '<') {
+                            const endIndex = fullText.indexOf('>', i);
+                            if (endIndex !== -1) {
+                                pElement.innerHTML += fullText.substring(i, endIndex + 1);
+                                i = endIndex + 1;
+                            } else {
+                                pElement.innerHTML += fullText.substring(i, i + 1);
+                                i++;
+                            }
+                        } else {
+                            pElement.innerHTML += fullText.substring(i, i + 1);
+                            i++;
+                        }
+                    } else {
+                        clearInterval(typingInterval);
+                    }
+                }, charSpeedMs);
+            }, delayMs);
+        }
+
+        paragraphs.forEach((p, index) => {
+            // Store original HTML content before clearing
+            p.dataset.originalHtml = p.innerHTML;
+            p.innerHTML = ''; // Clear content initially
+            p.style.visibility = 'hidden';
+
+            const textContentLength = p.dataset.originalHtml.replace(/<[^>]*>/g, '').length; // Approximate text length, ignoring HTML tags for duration calculation
+
+            // Add delay for each paragraph
+            typeText(p, p.dataset.originalHtml, currentDelay, charTypingSpeed);
+            currentDelay += (textContentLength * charTypingSpeed) + 1000; // Add time for typing + 1 second gap
+        });
+    }
+
     // Reset the birthday app when opening it
     if (id === 'window-gift') {
         resetBirthdayApp();
     }
 }
 
+
+
 // Function to Close Windows
 function closeWindow(id) {
     const windowEl = document.getElementById(id);
-    if(windowEl) windowEl.style.display = 'none';
+    if(windowEl) {
+      windowEl.classList.remove('active');
+      windowEl.style.display = 'none';
+    }
 }
 
 // Function to Start the Cosmic Journey
