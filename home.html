@@ -4,9 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>June 20, 2024</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home.css">
 </head>
 <body>
+
+    <div id="countdown-wrapper">
+        
+        <div id="cnt-loading" class="cnt-screen active">
+            <div class="loader-pulse"></div>
+            <h2 class="cnt-title">Preparing Something Special</h2>
+            <p class="cnt-subtitle">For someone very special...</p>
+        </div>
+
+        <div id="cnt-timer" class="cnt-screen">
+            <div class="icon-cake">🎂</div>
+            <h2 class="cnt-title">Birthday Countdown</h2>
+            <p class="cnt-subtitle">The magical moment approaches...</p>
+            
+            <div class="timer-grid">
+                <div class="time-box pink">
+                    <span id="d">00</span>
+                    <label>DAYS</label>
+                </div>
+                <div class="time-box purple">
+                    <span id="h">00</span>
+                    <label>HOURS</label>
+                </div>
+                <div class="time-box blue">
+                    <span id="m">00</span>
+                    <label>MINUTES</label>
+                </div>
+                <div class="time-box dark-blue">
+                    <span id="s">00</span>
+                    <label>SECONDS</label>
+                </div>
+            </div>
+            <button onclick="showCelebration()" style="margin-top: 30px; padding: 10px 20px; background: #ff66b2; color: white; border: none; border-radius: 5px; cursor: pointer;">Skip Countdown</button>
+            <p class="cnt-footer">The surprise is just moments away 💖</p>
+        </div>
+
+        <div id="cnt-celebrate" class="cnt-screen">
+            <canvas id="confetti-canvas"></canvas>
+            <div class="celebrate-content">
+                <div class="gift-icon-lg">🎁</div>
+                <h1 class="cnt-big-text">The Countdown<br>Is Over!</h1>
+                <p class="cnt-subtitle">But before we celebrate...</p>
+                <button id="start-magic-btn" onclick="startTheRealJourney()">
+                    ✨ Discover the Journey ✨
+                </button>
+                <p class="cnt-footer">Click to reveal the story! ❤️</p>
+            </div>
+        </div>
+
+    </div>
 
     <!-- =============================================== -->
     <!-- ==== JOURNEY INTRO (Visible First) ==== -->
@@ -214,9 +264,16 @@
             </div>
 
 
+            <div class="start-menu" id="start-menu" style="display: none;">
+                <div class="start-header">Viivi OS</div>
+                <div class="start-item" onclick="location.reload()">🔄 Restart System</div>
+                <div class="start-item" onclick="alert('System operating at 100% Love Capacity')">♥ System Status</div>
+                <div class="start-item" onclick="window.close()">✖ Shut Down</div>
+            </div>
+
             <div class="taskbar">
-                <button class="start-btn">Start</button>
-                <div class="time">12:21 AM</div>
+                <button class="start-btn" onclick="toggleStartMenu()">Start</button>
+                <div class="time" id="taskbar-clock">12:21 AM</div>
             </div>
         </div>
 
@@ -231,15 +288,32 @@
                 </div>
 
                 <div class="timeline">
-                    
+                    <div class="timeline-event">
+                        <h2>The Spark</h2>
+                        <span class="date">June 20, 2024</span>
+                        <p>The night the stars aligned. It wasn't just a conversation; it was the start of a galaxy.</p>
+                    </div>
+
+                    <div class="timeline-event">
+                        <h2>First Laugh</h2>
+                        <span class="date">July 2024</span>
+                        <p>Connecting over the small things. Realizing this frequency was different.</p>
+                    </div>
+
+                    <div class="timeline-event">
+                        <h2>Here & Now</h2>
+                        <span class="date">Present Day</span>
+                        <p>Building a universe, one memory at a time.</p>
+                    </div>
+
                     <div class="footer-section">
-                        <button class="retro-btn" style="background:transparent; color: white; border: 1px solid white;" onclick="location.reload()">↺ Return to Desktop</button>
+                        <button class="retro-btn" style="background:transparent; color: white; border: 1px solid white; padding: 10px 20px; margin-top: 50px; cursor: pointer;" onclick="location.reload()">↺ Return to Desktop</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="home.js"></script>
 </body>
 </html>

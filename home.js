@@ -1,46 +1,52 @@
-document.addEventListener('DOMContentLoaded', (event) => {
+// =============================================== //
+// ==== GLOBAL JOURNEY INTRO VARIABLES ==== //
+// =============================================== //
+let journeyIntro;
+let desktopView;
+let enterSpaceBtn;
+let journeyScreens;
+let journeyStarBg;
+
+let currentScreen = 1; // Initial screen
+let totalScreens;
+const screenTimings = [4000, 4000, 5000, 5000, 99999]; // Time for each screen, last one is indefinite
+
+// =============================================== //
+// ==== JOURNEY INTRO LOGIC (Global Function) ==== //
+// =============================================== //
+function nextJourneyScreen() {
+    if (currentScreen >= totalScreens) return;
+
+    const current = document.querySelector(`.journey-screen[data-screen="${currentScreen}"]`);
+    if (current) current.classList.remove('active');
+
+    currentScreen++;
     
-    // =============================================== //
-    // ==== JOURNEY INTRO LOGIC ==== //
-    // =============================================== //
-    const journeyIntro = document.getElementById('journey-intro');
-    const desktopView = document.getElementById('desktop-view');
-    const enterSpaceBtn = document.getElementById('enter-space-btn');
-    const journeyScreens = document.querySelectorAll('.journey-screen');
-    const journeyStarBg = document.querySelector('.journey-star-bg');
-    
-    let currentScreen = 1;
-    const totalScreens = journeyScreens.length;
-    const screenTimings = [4000, 4000, 5000, 5000, 99999]; // Time for each screen, last one is indefinite
+    const next = document.querySelector(`.journey-screen[data-screen="${currentScreen}"]`);
+    if (next) {
+        next.classList.add('active');
 
-    function nextJourneyScreen() {
-        if (currentScreen >= totalScreens) return;
-
-        const current = document.querySelector(`.journey-screen[data-screen="${currentScreen}"]`);
-        if (current) current.classList.remove('active');
-
-        currentScreen++;
-        
-        const next = document.querySelector(`.journey-screen[data-screen="${currentScreen}"]`);
-        if (next) {
-            next.classList.add('active');
-
-            // Show stars on screen 2
-            if (currentScreen === 2) {
-                if(journeyStarBg) journeyStarBg.style.opacity = '0.1';
-            }
-
-            // Set timeout for the next transition
-            setTimeout(nextJourneyScreen, screenTimings[currentScreen - 1]);
+        // Show stars on screen 2
+        if (currentScreen === 2) {
+            if(journeyStarBg) journeyStarBg.style.opacity = '0.1';
         }
-    }
 
-    // Start the journey
-    if (journeyIntro) {
-        setTimeout(nextJourneyScreen, screenTimings[0]);
+        // Set timeout for the next transition
+        setTimeout(nextJourneyScreen, screenTimings[currentScreen - 1]);
     }
-    
-    // Handle transition to desktop
+}
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Initialize global variables once DOM is ready
+    journeyIntro = document.getElementById('journey-intro');
+    desktopView = document.getElementById('desktop-view');
+    enterSpaceBtn = document.getElementById('enter-space-btn');
+    journeyScreens = document.querySelectorAll('.journey-screen');
+    journeyStarBg = document.querySelector('.journey-star-bg');
+    totalScreens = journeyScreens.length; // Set totalScreens after journeyScreens is populated
+
+    // Handle transition to desktop (using globally accessible variables)
     if (enterSpaceBtn) {
         enterSpaceBtn.addEventListener('click', () => {
             journeyIntro.style.opacity = '0';
@@ -106,8 +112,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         document.addEventListener('mouseup', () => { isDragging = false; });
     });
-});
 
+    // --- TASKBAR FUNCTIONS ---
+    // Update clock immediately
+    updateClock(); 
+
+    // Close start menu when clicking elsewhere (using globally accessible variables)
+    document.addEventListener('click', (e) => {
+        const menu = document.getElementById('start-menu');
+        const btn = document.querySelector('.start-btn');
+        if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+            menu.style.display = 'none';
+        }
+    });
+
+}); // End of DOMContentLoaded
 
 // --- BASE DESKTOP UI FUNCTIONS (can be outside DOMContentLoaded) ---
 
@@ -150,7 +169,7 @@ function startCosmicJourney() {
 
 // --- NEW BIRTHDAY SURPRISE FUNCTIONS ---
 
-// NAVIGATION & STATE RESET
+//NAVIGATION & STATE RESET
 function nextScreen(screenId) {
     document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active-screen'));
     const nextScreenEl = document.getElementById(screenId);
@@ -318,7 +337,19 @@ function endGame(moveCatcherCallback) {
         canvas.removeEventListener('mousemove', moveCatcherCallback);
     }
 
-    alert(`Game Over! You caught ${gameScore} hearts! ❤️`);
+    // --- NEW: High Score Logic ---
+    let highScore = localStorage.getItem('heartGameHighScore') || 0;
+    let msg = `Game Over! You caught ${gameScore} hearts! ❤️`;
+    
+    if (gameScore > highScore) {
+        localStorage.setItem('heartGameHighScore', gameScore);
+        msg += `\n🌟 NEW HIGH SCORE! 🌟`;
+    } else {
+        msg += `\n(Best: ${highScore})`;
+    }
+    // -----------------------------
+
+    alert(msg);
     
     const startBtn = document.querySelector('.start-game-btn');
     if(startBtn) {
@@ -327,4 +358,164 @@ function endGame(moveCatcherCallback) {
     }
     const catcher = document.getElementById('catcher');
     if(catcher) catcher.style.display = 'none';
+}
+
+// --- COSMIC TIMELINE OBSERVER ---
+const timelineObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.timeline-event').forEach(el => timelineObserver.observe(el));
+
+// --- TASKBAR FUNCTIONS ---
+function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+    const timeString = `${hours}:${minutes} ${ampm}`;
+    
+    const clockEl = document.getElementById('taskbar-clock');
+    if(clockEl) clockEl.innerText = timeString;
+}
+setInterval(updateClock, 1000); // Update every second
+updateClock(); // Run immediately
+
+function toggleStartMenu() {
+    const menu = document.getElementById('start-menu');
+    if (menu) {
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+// Close start menu when clicking elsewhere
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('start-menu');
+    const btn = document.querySelector('.start-btn');
+    if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.style.display = 'none';
+    }
+});
+
+// =============================================== //
+// ==== COUNTDOWN & PRELOADER LOGIC ==== //
+// =============================================== //
+
+// 1. CONFIGURATION
+// SET THE BIRTHDAY DATE HERE (Year, Month (0-11), Day, Hour)
+const targetDate = new Date(2026, 0, 30, 0, 0, 0).getTime(); // Example: January 30, 2026
+// For testing, uncomment the line below to set timer to 10 seconds from now:
+// const targetDate = new Date().getTime() + 10000; 
+
+// 2. TIMING LOGIC
+const loaderScreen = document.getElementById('cnt-loading');
+const timerScreen = document.getElementById('cnt-timer');
+const celebScreen = document.getElementById('cnt-celebrate');
+
+// Simulate Loading for 3 seconds, then show Countdown
+setTimeout(() => {
+    if(loaderScreen) loaderScreen.classList.remove('active');
+    if(timerScreen) timerScreen.classList.add('active');
+    startTimer();
+}, 3000); 
+
+function startTimer() {
+    const timerInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        // Calculate time units
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Update DOM
+        if(document.getElementById('d')) document.getElementById('d').innerText = String(days).padStart(2, '0');
+        if(document.getElementById('h')) document.getElementById('h').innerText = String(hours).padStart(2, '0');
+        if(document.getElementById('m')) document.getElementById('m').innerText = String(minutes).padStart(2, '0');
+        if(document.getElementById('s')) document.getElementById('s').innerText = String(seconds).padStart(2, '0');
+
+        // If countdown ends
+        if (distance < 0) {
+            clearInterval(timerInterval);
+            showCelebration();
+        }
+    }, 1000);
+}
+
+function showCelebration() {
+    if(timerScreen) timerScreen.classList.remove('active');
+    if(celebScreen) celebScreen.classList.add('active');
+    startConfetti(); // Simple confetti effect
+}
+
+// 3. TRANSITION TO ORIGINAL JOURNEY
+function startTheRealJourney() {
+    // Fade out countdown wrapper
+    const wrapper = document.getElementById('countdown-wrapper');
+    const journeyIntro = document.getElementById('journey-intro'); // Get reference here
+
+    if(wrapper) {
+        wrapper.style.transition = "opacity 1s ease";
+        wrapper.style.opacity = 0;
+        setTimeout(() => {
+            wrapper.style.display = 'none';
+            
+            // Explicitly make journeyIntro visible
+            if (journeyIntro) {
+                journeyIntro.style.display = 'block'; // Ensure it's displayed
+                journeyIntro.style.opacity = '1'; // Ensure it's fully opaque
+            }
+
+            // --- TRIGGER THE ORIGINAL JOURNEY HERE ---
+            // This calls the existing function from your original code
+            nextJourneyScreen(); 
+        }, 1000);
+    }
+}
+
+// 4. SIMPLE CONFETTI EFFECT
+function startConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const pieces = [];
+    const colors = ['#ff3399', '#33ccff', '#ffff33', '#ffffff', '#cc33ff'];
+
+    for(let i=0; i<150; i++) {
+        pieces.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            size: Math.random() * 8 + 4,
+            speed: Math.random() * 3 + 2,
+            wobble: Math.random() * 10
+        });
+    }
+
+    function animateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+            p.y += p.speed;
+            p.x += Math.sin(p.wobble) * 2;
+            p.wobble += 0.1;
+            
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+
+            if(p.y > canvas.height) p.y = -10;
+        });
+        requestAnimationFrame(animateConfetti);
+    }
+    animateConfetti();
 }
