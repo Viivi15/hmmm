@@ -212,6 +212,11 @@ function openWindow(id) {
         initChat();
     }
 
+    // Add this new check for the "Memories_V3.exe" (window-v3) Gift App:
+    if (id === 'window-v3') {
+        openGiftApp();
+    }
+
     // Reset the birthday app when opening it
     if (id === 'window-gift') {
         resetBirthdayApp();
@@ -554,6 +559,67 @@ function initChat() {
             
         }, msg.delay || 0); // Default to 0 delay for system msgs
     });
+}
+
+// OPEN THE GIFT APP
+function openGiftApp() {
+    document.getElementById('section-envelope').style.display = 'none';
+    document.getElementById('gift-content').style.display = 'block';
+}
+
+// GAME LOGIC
+let score = 0;
+let gameInterval;
+let isPlaying = false;
+
+function startGame() {
+    if(isPlaying) return;
+    isPlaying = true;
+    score = 0;
+    document.getElementById('score').innerText = score;
+    document.querySelector('.start-game-btn').style.display = 'none';
+    document.getElementById('game-area').style.display = 'block';
+    document.getElementById('game-over').style.display = 'none';
+
+    // Move catcher with mouse inside the game box
+    const gameCanvas = document.getElementById('game-canvas');
+    gameCanvas.addEventListener('mousemove', (e) => {
+        const rect = gameCanvas.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        if(x < 0) x = 0;
+        if(x > rect.width) x = rect.width;
+        document.getElementById('catcher').style.left = x + 'px';
+    });
+
+    // Spawn hearts
+    gameInterval = setInterval(spawnHeart, 800);
+
+    // End game after 15 seconds (or 15 hearts)
+    setTimeout(endGame, 15000); 
+}
+
+function spawnHeart() {
+    const heart = document.createElement('div');
+    heart.innerHTML = '❤️';
+    heart.className = 'falling-heart';
+    heart.style.left = Math.random() * 90 + '%'; // Random horizontal position
+    document.getElementById('game-area').appendChild(heart);
+
+    // Check collision simple version
+    setTimeout(() => {
+        // Assume caught for fun or add complex collision logic
+        score++;
+        document.getElementById('score').innerText = score;
+        heart.remove();
+    }, 1800);
+}
+
+function endGame() {
+    isPlaying = false;
+    clearInterval(gameInterval);
+    document.getElementById('game-area').style.display = 'none';
+    document.getElementById('game-over').style.display = 'block';
+    document.getElementById('final-score').innerText = score;
 }
 
 // --- COSMIC TIMELINE OBSERVER ---
