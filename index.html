@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>June 20, 2024</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- =============================================== -->
+    <!-- ==== JOURNEY INTRO (Visible First) ==== -->
+    <!-- =============================================== -->
+    <div id="journey-intro">
+        <div class="journey-star-bg"></div>
+        <div class="journey-screen active" data-screen="1">
+            <p class="journey-text">Some journeys don’t start loudly.</p>
+        </div>
+        <div class="journey-screen" data-screen="2">
+            <p class="journey-text small">June 20, 2024 &nbsp;•&nbsp; 12:21 AM</p>
+            <p class="journey-text">A conversation began.</p>
+        </div>
+        <div class="journey-screen" data-screen="3">
+            <p class="journey-text">It wasn’t instant.<br>It became real slowly.</p>
+            <p class="journey-text small" style="margin-top: 30px;">Through talks.<br>Through silence.<br>Through staying.</p>
+        </div>
+        <div class="journey-screen" data-screen="4">
+            <p class="journey-text">Not every connection survives misunderstandings.<br>This one did.</p>
+        </div>
+        <div class="journey-screen" data-screen="5">
+            <p class="journey-text">So I made a place for it.</p>
+            <p class="journey-text small" style="margin-top: 30px;">For the memories.<br>For the laughter.<br>For today.</p>
+            <button id="enter-space-btn">🖥️ Enter Your Space</button>
+        </div>
+    </div>
+
+    <!-- =============================================== -->
+    <!-- ==== DESKTOP VIEW (Hidden by Default) ==== -->
+    <!-- =============================================== -->
+    <div id="desktop-view" style="display: none;">
+        <div id="desktop-screen">
+            <div id="sparkle-container"></div>
+            
+            <div class="icon-grid">
+                
+                <div class="icon" onclick="openWindow('window-blueprint')">
+                    <img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png" alt="folder">
+                    <p>The_Blueprint</p>
+                </div>
+
+                <div class="icon" onclick="openWindow('window-gift')"> <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" alt="icon">
+                    <p>Birthday_Surprise.exe</p>
+                </div>
+
+                <div class="icon" onclick="openWindow('window-chat')">
+                    <img src="https://win98icons.alexmeub.com/icons/png/network_internet_pcs_installer-0.png" alt="chat">
+                    <p>Frequency_3015.exe</p>
+                </div>
+
+                <div class="icon" onclick="startCosmicJourney()">
+                    <img src="https://win98icons.alexmeub.com/icons/png/world-3.png" alt="space">
+                    <p>Launch_Universe</p>
+                </div>
+
+                <div class="icon" onclick="openWindow('window-v3')">
+                    <img src="https://win98icons.alexmeub.com/icons/png/application_hourglass-2.png" alt="exe">
+                    <p>Memories_V3.exe</p>
+                </div>
+
+            </div>
+
+            <div id="window-blueprint" class="window draggable" style="display: none; top: 10%; left: 15%;">
+                <div class="title-bar">
+                    <div class="title-bar-text">The_Blueprint.txt - Notepad</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Close" onclick="closeWindow('window-blueprint')">X</button>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <p><strong>Subject: Why this world looks the way it does</strong></p>
+                    <br>
+                    <p>I thought about making this loud. Or flashy.<br>
+                    But then I thought about you.</p>
+                    <p>This isn't about spectacle.<br>
+                    It's about a place that feels like <strong>Us</strong>.</p>
+                    <hr class="divider">
+                    <p>Small moments.<br>Honesty.<br>Comfort.</p>
+                    <p><em>"Because you don’t need spectacle to feel something real."</em></p>
+                </div>
+            </div>
+
+            <div id="window-gift" class="window draggable" style="display: none; top: 5%; left: 30%; width: 400px; height: 680px; background: #000;">
+                <div class="title-bar" style="background: linear-gradient(90deg, #ff3399, #ff66b2);">
+                    <div class="title-bar-text">Birthday_Surprise.exe</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Close" onclick="closeWindow('window-gift')">X</button>
+                    </div>
+                </div>
+                
+                <div class="window-body app-container">
+                    
+                    <div id="screen-intro" class="app-screen active-screen">
+                        <img src="https://media.tenor.com/On7KVX1t_YYAAAAi/mocha-bear.gif" class="intro-bear" alt="cute bear">
+                        <h2 class="neon-text">A Cutiepie was born today!</h2>
+                        <p>21 years ago...</p>
+                        <button class="action-btn" onclick="nextScreen('screen-cake')">🎁 Start the Surprise</button>
+                    </div>
+
+                    <div id="screen-cake" class="app-screen">
+                        <h2 class="neon-text">Make a Wish...</h2>
+                        <div class="cake-container">
+                            <div class="cake">
+                                <div class="candle" id="candle" onclick="lightCandle()"></div>
+                                <div class="flame" id="flame"></div>
+                                <div class="layer layer-top"></div>
+                                <div class="layer layer-mid"></div>
+                                <div class="layer layer-btm"></div>
+                            </div>
+                        </div>
+                        <p id="cake-msg">Tap the candle to light it! 🕯️</p>
+                        <button id="btn-balloons" class="action-btn hidden" onclick="nextScreen('screen-balloons')">🎈 Pop Balloons</button>
+                    </div>
+
+                    <div id="screen-balloons" class="app-screen">
+                        <h2 class="neon-text">Pop All 4 Balloons!</h2>
+                        <div class="balloon-grid">
+                            <div class="balloon red" onclick="popBalloon(this)"></div>
+                            <div class="balloon blue" onclick="popBalloon(this)"></div>
+                            <div class="balloon green" onclick="popBalloon(this)"></div>
+                            <div class="balloon yellow" onclick="popBalloon(this)"></div>
+                        </div>
+                        <button id="btn-envelope" class="action-btn hidden" onclick="nextScreen('screen-envelope')">💌 Open Message</button>
+                    </div>
+
+                    <div id="screen-envelope" class="app-screen pink-bg">
+                        <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmhmZHRzaHlqanh6aW4zcnF6eG5qN3p5eW54dzh5eXF6eXF6eXF6eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/LpdiF3Z6L5V5Z6Y8Y/giphy.gif" class="kitty-peek" alt="kitty">
+                        <div class="cute-envelope" onclick="openMainContent()">
+                            <div class="envelope-flap"></div>
+                            <div class="envelope-pocket"></div>
+                            <div class="heart-seal">❤</div>
+                        </div>
+                        <div class="click-hint">✨ Click to Open ✨</div>
+                    </div>
+
+                    <div id="screen-feed" class="app-screen scrollable pink-bg">
+                        
+                        <div class="app-card">
+                            <h3>Little Notes From My Heart 💌</h3>
+                            <div class="sticky-note yellow" onclick="alert('You make every day brighter ☀️')"><p>You make every day brighter ☀️</p></div>
+                            <div class="sticky-note purple" onclick="alert('You\'re my favorite person 💕')"><p>You're my favorite person 💕</p></div>
+                        </div>
+
+                        <div class="app-card">
+                            <h3>Playlist For You 🎵</h3>
+                            <div class="music-player">
+                                <img src="https://i.scdn.co/image/ab67616d0000b273b5f9e28219c169fd4b9e8379" class="album-cover" alt="cover">
+                                <div class="song-details">
+                                    <h4>Die With A Smile</h4>
+                                    <p>Lady Gaga</p>
+                                </div>
+                                <div class="play-btn">▶</div>
+                            </div>
+                        </div>
+
+                        <div class="app-card">
+                            <h3>Some Sweet Moments 📸</h3>
+                            <div class="photo-stack">
+                                <img src="https://media.tenor.com/f2Q8Hj8s5owAAAAM/hello-kitty-heart.gif" alt="moment">
+                            </div>
+                            <p style="font-size: 10px; color: #888;">(Imagine swiping these...)</p>
+                        </div>
+
+                        <div class="app-card game-card">
+                            <h3>Catch Hearts! 🎮</h3>
+                            <p>Score: <span id="score">0</span>/15</p>
+                            <div id="game-canvas">
+                                <button class="start-game-btn" onclick="startGame()">▶ Play</button>
+                                <div id="catcher" style="display:none;">🐱</div>
+                            </div>
+                        </div>
+
+                        <br><br>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="window-chat" class="window draggable" style="display: none; top: 15%; left: 30%; width: 500px; height: 450px;">
+                <div class="title-bar">
+                    <div class="title-bar-text">Frequency_3015.exe - Secure Line</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Close" onclick="closeWindow('window-chat')">X</button>
+                    </div>
+                </div>
+                <div class="window-body" style="height: 90%; padding: 0; overflow: hidden; background: #222;">
+                    <iframe src="https://padlet.com/embed/scieducation20" frameborder="0" style="width:100%; height:100%; display:block;"></iframe>
+                </div>
+            </div>
+
+            <div id="window-v3" class="window draggable" style="display: none; top: 5%; left: 15%; width: 800px; height: 600px; background: #000;">
+                <div class="title-bar" style="background: linear-gradient(90deg, #8a2be2, #4b0082);">
+                    <div class="title-bar-text">Memories_V3.exe - Harshit Edition</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Close" onclick="closeWindow('window-v3')">X</button>
+                    </div>
+                </div>
+                
+                <div class="window-body" style="padding: 0; height: 100%; overflow: hidden;">
+                    <iframe 
+                        src="harshit_v3.html" 
+                        style="width: 100%; height: 100%; border: none; background: black;">
+                    </iframe>
+                </div>
+            </div>
+
+
+            <div class="taskbar">
+                <button class="start-btn">Start</button>
+                <div class="time">12:21 AM</div>
+            </div>
+        </div>
+
+        <div id="cosmic-screen" class="hidden">
+            <div class="star-layer"></div>
+            <div class="cosmic-container">
+                <div class="intro-section">
+                    <h1 class="glow-text">The Night It Began</h1>
+                    <p class="subtitle">June 20, 2024 • 12:21 AM</p>
+                    <p class="quote">"Even the universe remembers that night."</p>
+                    <div class="scroll-indicator">↓ Scroll to Explore ↓</div>
+                </div>
+
+                <div class="timeline">
+                    
+                    <div class="footer-section">
+                        <button class="retro-btn" style="background:transparent; color: white; border: 1px solid white;" onclick="location.reload()">↺ Return to Desktop</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

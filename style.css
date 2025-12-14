@@ -1,0 +1,290 @@
+/* =============================================== */
+/* ==== JOURNEY INTRO STYLES ==== */
+/* =============================================== */
+
+#journey-intro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #050505;
+    z-index: 9999;
+    font-family: 'Poppins', sans-serif;
+    color: #e0e0e0;
+    opacity: 1;
+    transition: opacity 1.5s ease-out;
+}
+
+.journey-star-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(white 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 2s ease-in;
+}
+
+.journey-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    visibility: hidden;
+}
+
+.journey-screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.journey-text {
+    font-size: 2.2rem;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 1px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.journey-text.small {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    color: #aaa;
+}
+
+#enter-space-btn {
+    margin-top: 50px;
+    padding: 12px 30px;
+    background: transparent;
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.5s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#enter-space-btn:hover {
+    border-color: #ff99cc;
+    color: #ff99cc;
+    box-shadow: 0 0 15px rgba(255,153,204,0.2);
+}
+
+
+/* =============================================== */
+/* ==== ORIGINAL DESKTOP STYLES ==== */
+/* =============================================== */
+
+/* ---
+   BIRTHDAY GUI OVERHAUL
+   - Font: Poppins from Google Fonts
+   - Theme: Dark Purple, Neon Pink, Sparkles
+--- */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://unpkg.com/ress/dist/en/MS_Sans_Serif.woff');
+
+/* --- BASE & DESKTOP THEME --- */
+
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    overflow: hidden; font-family: 'MS Sans Serif', sans-serif;
+    font-size: 12px;
+}
+
+#desktop-screen {
+    width: 100vw; height: 100vh;
+    background-color: #1a1128; /* Dark Birthday Purple */
+    display: flex; flex-wrap: wrap;
+    align-content: flex-start;
+    padding: 10px; box-sizing: border-box;
+    position: relative;
+    overflow: hidden; /* For sparkles */
+}
+
+/* --- Animated Sparkle Background --- */
+.sparkle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff3399;
+    animation: sparkle-anim 5s linear infinite;
+    opacity: 0;
+}
+@keyframes sparkle-anim {
+    0% { transform: translateY(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+/* --- ICONS --- */
+.icon-grid { display: flex; flex-direction: column; gap: 20px; padding: 15px; z-index: 10; }
+.icon {
+    width: 80px; text-align: center; color: white;
+    cursor: pointer; text-shadow: 1px 1px 3px black;
+    transition: transform 0.2s;
+}
+.icon:hover { transform: scale(1.1); }
+.icon img { width: 32px; height: 32px; margin: 0 auto 5px auto; }
+.icon p { font-size: 0.9em; margin: 0; word-wrap: break-word; }
+
+
+/* --- GENERAL WINDOW & TASKBAR THEME --- */
+.taskbar {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 28px;
+    background: #2a2138; /* Dark Purple */
+    border-top: 2px solid #4a3f5f; /* Lighter Purple */
+    display: flex; align-items: center; padding: 2px;
+    box-sizing: border-box; z-index: 1000;
+}
+.start-btn {
+    background: linear-gradient(to top, #ff3399, #ff66b2);
+    border: 1px solid #ff99cc;
+    color: white; font-weight: bold;
+    padding: 2px 10px; margin-right: 5px; cursor: pointer;
+    font-size: 12px; height: 100%;
+}
+.time {
+    background: #1a1128; color: #ff99cc;
+    border: 1px solid #4a3f5f;
+    padding: 2px 5px; margin-left: auto; margin-right: 2px;
+    font-size: 12px; height: 100%; box-sizing: border-box;
+    display: flex; align-items: center;
+}
+
+.window {
+    background: #c0c0c0; /* Fallback for non-themed windows */
+    border: 2px solid; border-color: #4a3f5f;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    position: absolute; min-width: 250px; display: flex; flex-direction: column;
+}
+.window .title-bar {
+    background: linear-gradient(to right, #4a3f5f, #2a2138);
+    color: #fff; padding: 5px; font-weight: bold;
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: grab; user-select: none;
+}
+.window .title-bar-controls button {
+    background: #4a3f5f; border: 1px solid #2a2138;
+    color: white; cursor: pointer; width: 18px; height: 18px;
+}
+.window .window-body {
+    padding: 10px; flex-grow: 1; overflow-y: auto; background: #f0f0f0;
+}
+
+
+/* --- BIRTHDAY APP SPECIFIC STYLES --- */
+#window-gift {
+    background: #1a1128; /* Match desktop */
+    border: 2px solid #ff3399;
+}
+#window-gift .title-bar {
+    background: linear-gradient(90deg, #ff3399, #ff66b2);
+}
+
+.app-container {
+    width: 100%; height: 100%; position: relative; overflow: hidden;
+    background-color: #0d0d0d;
+    color: white; font-family: 'Poppins', sans-serif;
+    padding: 0;
+}
+.app-screen {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    box-sizing: border-box; display: none; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 20px; transition: opacity 0.6s ease;
+}
+.app-screen.active-screen { display: flex; }
+.scrollable { display: block; overflow-y: auto; justify-content: flex-start; }
+.pink-bg { background-color: #fff5f8; color: #333; }
+
+.intro-bear { width: 150px; margin-bottom: 20px; }
+
+.neon-text { 
+    text-shadow: 0 0 8px #ff3399, 0 0 15px #ff3399, 0 0 25px #ff3399; 
+    color: #fff; margin-bottom: 10px; font-weight: 700;
+}
+.action-btn {
+    background: linear-gradient(90deg, #ff3399, #ff6666);
+    border: none; padding: 12px 25px; border-radius: 25px;
+    color: white; font-weight: 600; cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 51, 153, 0.6);
+    margin-top: 20px; transition: transform 0.2s, box-shadow 0.2s;
+}
+.action-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 51, 153, 0.8); }
+
+/* Cake */
+.cake-container { margin: 30px 0; }
+.cake { position: relative; width: 150px; height: 100px; margin: 0 auto; }
+.layer { background: #5c3a21; width: 100%; height: 30px; border-radius: 5px; position: absolute; }
+.layer-btm { bottom: 0; width: 160px; left: -5px; background: #4a2d14; }
+.layer-mid { bottom: 30px; }
+.layer-top { bottom: 60px; background: #f5e6d3; height: 40px; border-radius: 10px 10px 5px 5px; }
+.candle { width: 10px; height: 30px; background: #ff4d4d; margin: 0 auto; position: relative; top: -30px; cursor: pointer; border: 1px solid #c00; }
+.flame {
+    width: 15px; height: 25px; background: orange; border-radius: 50% 50% 20% 20%;
+    position: absolute; top: -55px; left: 50%; transform: translateX(-50%);
+    box-shadow: 0 0 20px orange, 0 0 30px yellow; display: none; animation: flicker 0.5s infinite alternate;
+}
+@keyframes flicker { to { transform: translateX(-50%) scale(1.1); opacity: 0.8; } }
+
+/* Balloons */
+.balloon-grid { display: flex; gap: 20px; justify-content: center; margin: 30px 0; }
+.balloon { width: 50px; height: 65px; border-radius: 50%; cursor: pointer; transition: transform 0.2s, opacity 0.2s; position: relative; box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2); }
+.balloon::after { content: ''; position: absolute; bottom: -10px; left: 24px; width: 2px; height: 30px; background: rgba(255,255,255,0.5); }
+.balloon:hover { transform: scale(1.1); }
+.red { background: radial-gradient(circle at 15px 15px, #ff8c8c, #ff4d4d); }
+.blue { background: radial-gradient(circle at 15px 15px, #8c9eff, #4d79ff); }
+.green { background: radial-gradient(circle at 15px 15px, #8cffb3, #4dff88); }
+.yellow { background: radial-gradient(circle at 15px 15px, #ffff8c, #ffff4d); }
+
+/* Envelope & Feed */
+.kitty-peek { width: 100px; position: relative; top: 10px; z-index: 1; }
+.cute-envelope { width: 260px; height: 160px; background: #fff; margin: 20px auto; position: relative; z-index: 2; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; }
+.envelope-flap { position: absolute; top: 0; left: 0; border-left: 130px solid transparent; border-right: 130px solid transparent; border-top: 100px solid #ff3333; z-index: 4; transition: transform 0.6s ease; transform-origin: top; }
+.envelope-pocket { position: absolute; bottom: 0; left: 0; border-left: 130px solid #ffe6f2; border-right: 130px solid #ffccdd; border-top: 80px solid transparent; border-bottom: 80px solid #ffe6f2; z-index: 3; border-radius: 0 0 10px 10px; }
+.heart-seal { position: absolute; top: 55px; left: 50%; transform: translateX(-50%); background: white; color: red; font-size: 16px; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; z-index: 5; }
+.click-hint { margin-top: 20px; color: #ff66b2; font-weight: bold; background: white; padding: 5px 15px; border-radius: 20px; display: inline-block; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+/* Feed Cards */
+.app-card { background: #fff; border-radius: 20px; padding: 20px; margin: 0 15px 20px 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: left; }
+.app-card h3 { margin: 0 0 10px 0; color: #ff6633; font-size: 18px; font-weight: 600; }
+
+.sticky-note { padding: 15px; margin: 10px 0; border-radius: 10px; text-align: left; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+.sticky-note:hover { transform: scale(1.03); }
+.yellow { background: #fffacd; } .purple { background: #e6e6fa; }
+.sticky-note p { margin: 0; font-weight: 600; color: #555; }
+
+.music-player { background: linear-gradient(45deg, #33ccff, #33aaff); border-radius: 15px; padding: 15px; display: flex; align-items: center; color: white; }
+.album-cover { width: 50px; height: 50px; border-radius: 8px; margin-right: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.song-details h4, .song-details p { margin: 0; font-size: 14px; font-weight: 600; }
+.song-details p { opacity: 0.8; font-size: 12px; font-weight: 400; }
+.play-btn { font-size: 24px; margin-left: auto; cursor: pointer; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+
+.photo-stack img { height: 150px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+.game-card p { text-align: center; font-weight: bold; }
+#game-canvas { height: 180px; background: #fff0f5; border-radius: 10px; position: relative; overflow: hidden; margin-top: 10px; }
+#catcher { position: absolute; bottom: 5px; left: 50%; font-size: 30px; transform: translateX(-50%); transition: left 0.1s ease; cursor: none; }
+.falling-heart { position: absolute; font-size: 20px; animation: fall 2s linear; top: -20px; user-select: none; }
+@keyframes fall { to { top: 200px; } }
+
+/* Cosmic screen hidden by default */
+.hidden, #cosmic-screen { display: none; }
