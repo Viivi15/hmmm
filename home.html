@@ -266,15 +266,28 @@
                 </div>
             </div>
 
-            <div id="window-chat" class="window draggable" style="display: none; top: 15%; left: 30%; width: 500px; height: 450px;">
-                <div class="title-bar">
-                    <div class="title-bar-text">Frequency_3015.exe - Secure Line</div>
+            <div id="window-chat" class="window draggable" style="display: none; top: 15%; left: 30%; width: 450px; height: 600px; background: #000; border: 1px solid #333;">
+                <div class="title-bar" style="background: linear-gradient(90deg, #111, #222); border-bottom: 1px solid #00d2ff;">
+                    <div class="title-bar-text" style="color: #00d2ff; font-family: 'Courier New';">Frequency_3015.exe • Encrypted_Signal</div>
                     <div class="title-bar-controls">
                         <button aria-label="Close" onclick="closeWindow('window-chat')">X</button>
                     </div>
                 </div>
-                <div class="window-body" style="height: 90%; padding: 0; overflow: hidden; background: #222;">
-                    <iframe src="https://padlet.com/embed/scieducation20" frameborder="0" style="width:100%; height:100%; display:block;"></iframe>
+                
+                <div class="window-body" style="padding: 0; height: 100%; display: flex; flex-direction: column; background: #050505;">
+                    
+                    <div class="chat-status">
+                        <div class="status-dot"></div>
+                        <span id="connection-status">ESTABLISHING CONNECTION...</span>
+                    </div>
+
+                    <div id="chat-feed" class="chat-feed">
+                    </div>
+
+                    <div class="chat-input-area">
+                        <div class="fake-input">Signal Locked. Reply Disabled.</div>
+                        <button class="send-btn">🔒</button>
+                    </div>
                 </div>
             </div>
 

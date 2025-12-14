@@ -207,6 +207,11 @@ function openWindow(id) {
         });
     }
 
+    // Add this new check for the chat window:
+    if (id === 'window-chat') {
+        initChat();
+    }
+
     // Reset the birthday app when opening it
     if (id === 'window-gift') {
         resetBirthdayApp();
@@ -500,6 +505,55 @@ function resetBirthdayApp() {
     if (newGameSpawner) clearInterval(newGameSpawner);
     if (gameTimerInterval) clearInterval(gameTimerInterval);
     document.querySelectorAll('#new-game-canvas .heart').forEach(heart => heart.remove());
+}
+
+// --- SECURE CHAT LOGIC ---
+
+// 1. The Messages (Edit these!)
+const chatMessages = [
+    { type: 'system', text: 'ENCRYPTED CONNECTION SECURED' },
+    { type: 'incoming', text: 'Hey... you there?', delay: 1000 },
+    { type: 'incoming', text: 'I tried to find the right words for today.', delay: 2500 },
+    { type: 'incoming', text: 'Just wanted to remind you that you are capable of amazing things.', delay: 4500 },
+    { type: 'incoming', text: 'This year is yours to conquer. I believe in you. 💙', delay: 7000 },
+    { type: 'system', text: 'ATTACHMENT RECEIVED: [Virtual_Hug.zip]' },
+    { type: 'incoming', text: 'Happy Birthday, King. Over and out. 🦇', delay: 9500 }
+];
+
+let chatInitialized = false;
+
+function initChat() {
+    if (chatInitialized) return;
+    chatInitialized = true;
+    
+    const feed = document.getElementById('chat-feed');
+    const status = document.getElementById('connection-status');
+    
+    // Show "Connected" after a moment
+    setTimeout(() => {
+        if(status) status.innerText = "CONNECTED: SIGNAL STRONG";
+        if(status) status.style.color = "#00ff88"; // Green
+    }, 1500);
+
+    // Loop through messages
+    chatMessages.forEach((msg, index) => {
+        setTimeout(() => {
+            // Create Message Element
+            const div = document.createElement('div');
+            div.className = `chat-msg ${msg.type}`;
+            div.innerText = msg.text;
+            
+            // Add to feed
+            feed.appendChild(div);
+            
+            // Scroll to bottom
+            feed.scrollTop = feed.scrollHeight;
+            
+            // Optional sound effect could go here
+            // new Audio('pop.mp3').play();
+            
+        }, msg.delay || 0); // Default to 0 delay for system msgs
+    });
 }
 
 // --- COSMIC TIMELINE OBSERVER ---
